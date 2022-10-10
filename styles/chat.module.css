@@ -1,0 +1,25 @@
+.chatBack {
+    background-color: #dbdbdb;
+    margin-left: 50px;
+    margin-top: 20px;
+    margin-right: 300px;
+    padding-top: 10px;
+    padding-left: 15px;
+    padding-bottom: 10px;
+    font-weight: 100;
+    border-radius: 10px;
+}
+
+.name {
+    color: blue;
+    font-weight: 150;
+}
+
+.date {
+    font-size: smaller;
+}
+
+.chat {
+    font-weight: 150;
+    width: 98%;
+}
