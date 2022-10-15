@@ -1,5 +1,3 @@
-const express = require("express");
-var bodyParser = require("body-parser");
 require("dotenv").config();
 
 const mongoose = require("mongoose");
@@ -9,9 +7,7 @@ const connectOption = {
 };
 
 mongoose.connect(
-    `mongodb+srv://taka:` +
-        process.env.DB_PASSWORD +
-        `@cluster0.zicemzi.mongodb.net/?retryWrites=true&w=majority`,
+    `mongodb+srv://taka:${process.env.NEXT_PUBLIC_DB_PASSWORD}@cluster0.zicemzi.mongodb.net/?retryWrites=true&w=majority`,
     connectOption
 );
 const db = mongoose.connection;
@@ -20,27 +16,14 @@ db.once("open", () => console.log("DB connection successful"));
 
 var Message = require("./model/messageSchema");
 
-const app = express();
-const allowCrossDomain = function (req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE");
-    res.header(
-        "Access-Control-Allow-Headers",
-        "Content-Type, Authorization, access_token"
-    );
-
-    // intercept OPTIONS method
-    if ("OPTIONS" === req.method) {
-        res.send(200);
-    } else {
-        next();
-    }
-};
-
-app.use(allowCrossDomain);
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
-
 export default function handler(req, res) {
-    console.log(Message.find({}));
+    try {
+        Message.find({}, function (err, docs) {
+            res.status(200).json({ docs });
+            res.end();
+        });
+    } catch (error) {
+        res.json(error);
+        res.status(405).end();
+    }
 }
