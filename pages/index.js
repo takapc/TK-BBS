@@ -4,7 +4,7 @@ import Router from "next/router";
 import { useState } from "react";
 
 export async function getServerSideProps() {
-    const chat = await fetch("http://localhost:8000/get");
+    const chat = await fetch("https://tk-api.onrender.com/get");
     const data = await chat.json();
     let ids = [0];
     data.docs.map((value) => {
@@ -31,7 +31,7 @@ export default function Home({ messages }) {
     };
     async function onSubmit() {
         if (text == "") return;
-        const chat = await fetch("http://localhost:8000/get");
+        const chat = await fetch("https://tk-api.onrender.com/get");
         const data = await chat.json();
         let ids = [0];
         data.docs.map((value) => {
@@ -44,7 +44,7 @@ export default function Home({ messages }) {
             content: text,
             created: Date.now(),
         };
-        const res = await fetch("http://localhost:8000/post", {
+        const res = await fetch("https://tk-api.onrender.com/post", {
             method: "POST",
             body: JSON.stringify(postItem),
             headers: {
