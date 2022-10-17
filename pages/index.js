@@ -42,7 +42,7 @@ export default function Home({ messages }) {
             id: ids[0] + 1,
             name: `${name}`,
             content: text,
-            created: Date.now().setHours(Date.now().getHours() + 9),
+            created: Date.now(),
         };
         const res = await fetch("https://tk-api.onrender.com/post", {
             method: "POST",
