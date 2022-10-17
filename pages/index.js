@@ -37,7 +37,7 @@ export default function Home({ messages }) {
         data.docs.map((value) => {
             ids.push(value.id);
         });
-        ids.sort().reverse();
+        ids.sort((a, b) => a - b).reverse();
         const postItem = {
             id: ids[0] + 1,
             name: `${name}`,
