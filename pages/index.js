@@ -19,7 +19,7 @@ export async function getServerSideProps() {
     };
 }
 
-export default function Home({ messages, id }) {
+export default function Home({ messages }) {
     const [name, setName] = useState("名無し");
     const [text, setText] = useState("");
 
