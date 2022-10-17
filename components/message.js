@@ -2,7 +2,7 @@ import styles from "../styles/chat.module.css";
 
 export default function Chat({ children, id, name, created }) {
     created = created.toString();
-    created = created.replace("T", "").replace("Z", "");
+    created = created.replace("T", " ").replace("Z", " ");
 
     return (
         <>
