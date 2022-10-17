@@ -60,7 +60,7 @@ export default function Home({ messages }) {
     return (
         <div>
             <h1 className={styles.titlePos}>
-                <span className={styles.title}></span>
+                <span className={styles.title}>TK 匿名掲示板</span>
             </h1>
             {messages.map((value) => {
                 return (
