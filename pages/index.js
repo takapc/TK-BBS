@@ -39,10 +39,12 @@ export default function Home({ messages }) {
         const responseAnchor = ">>" + id;
         let body = "";
 
-        if (text.startsWith(">>") & !text.match(regex)) {
-            body = text.replace(/>>*([\s\S]*)/gm, "$1").trim();
-        } else if (text.match(regex)) {
+        if (text.match(regex)) {
             body = text.replace(regex, "$1").trim();
+        } else if (text.startsWith(">>")) {
+            body = text.replace(/>>*([\s\S]*)/gm, "$1").trim();
+        } else {
+            body = text;
         }
         setText(responseAnchor + " " + body);
 
