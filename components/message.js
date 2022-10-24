@@ -1,6 +1,6 @@
 import styles from "../styles/chat.module.css";
 
-export default function Chat({ children, id, name, created }) {
+export default function Chat({ children, id, name, created, onClick }) {
     created = created.toString();
     created = created.replace("T", " ").replace("Z", " ");
 
@@ -8,12 +8,12 @@ export default function Chat({ children, id, name, created }) {
         <>
             <div className={styles.chatBack}>
                 {id}
-                <span className={styles.name}>
+                <span className={styles.name}onClick={() => onClick(id)}>
                     {" "}
                     {name} {created}
                 </span>
                 <span className={styles.date}></span>
-                <p className={styles.chat}>{children}</p>
+                <div className={styles.chat}>{children}</div>
             </div>
         </>
     );

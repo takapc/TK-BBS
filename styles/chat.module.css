@@ -1,8 +1,8 @@
 .chatBack {
-    background-color: #dbdbdb;
-    margin-left: 50px;
+    background-color: #ededed;
+    margin-left: 40px;
     margin-top: 20px;
-    margin-right: 300px;
+    margin-right: 20%;
     padding-top: 10px;
     padding-left: 15px;
     padding-bottom: 10px;
@@ -13,6 +13,7 @@
 .name {
     color: blue;
     font-weight: 150;
+    cursor : pointer;
 }
 
 .date {
