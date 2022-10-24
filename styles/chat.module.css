@@ -13,6 +13,7 @@
 .name {
     color: blue;
     font-weight: 150;
+    cursor : pointer;
 }
 
 .date {

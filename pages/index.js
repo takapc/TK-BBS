@@ -3,7 +3,7 @@ import { toast, Toaster } from "react-hot-toast";
 import Chat from "../components/message.js";
 import Router from "next/router";
 import { useState } from "react";
-import { animateScroll as scroll } from "react-scroll";
+import { animateScroll as scroll, Element as ScrollElement, scroller } from "react-scroll";
 
 export async function getServerSideProps() {
     const chat = await fetch("https://tk-api.onrender.com/get");
@@ -34,6 +34,32 @@ export default function Home({ messages }) {
         setText(() => e.target.value);
     };
 
+    const updateResponseAnchor = (id) => {
+        const regex = />>\d*([\s\S]*)/gm;
+        const responseAnchor = ">>" + id;
+        let body = "";
+
+        if (text.startsWith(">>") & !text.match(regex)) {
+            body = text.replace(/>>*([\s\S]*)/gm, "$1").trim();
+        } else if (text.match(regex)) {
+            body = text.replace(regex, "$1").trim();
+        }
+        setText(responseAnchor + " " + body);
+
+        toast(id + 'に返信中',
+            {
+                icon: '↩️',
+                duration: 1000,
+                style: {
+                    borderRadius: '40px',
+                    background: '#333',
+                    color: '#fff',
+                },
+                position: "bottom-center"
+            }
+        );
+    }
+
     async function onSubmit() {
         if (text == "") {
             toast.error("本文が空です");
@@ -44,11 +70,11 @@ export default function Home({ messages }) {
         setSubmitting(true);
 
         const chat = await fetch("https://tk-api.onrender.com/get")
-        .catch((e)=>{
-            setSubmitting(false);
-            toast.error("投稿に失敗しました", { id: toastId })
-            throw Error(e);
-        });
+            .catch((e) => {
+                setSubmitting(false);
+                toast.error("投稿に失敗しました", { id: toastId })
+                throw Error(e);
+            });
 
         const data = await chat.json();
 
@@ -71,7 +97,7 @@ export default function Home({ messages }) {
             headers: {
                 "Content-Type": "application/json",
             },
-        }).catch((e)=>{
+        }).catch((e) => {
             toast.error("投稿に失敗しました", { id: toastId })
             setSubmitting(false);
             throw Error(e);
@@ -92,7 +118,17 @@ export default function Home({ messages }) {
     async function onReload() {
         Router.push("/", undefined, { scroll: false });
         toast.success("更新しました");
-        scroll.scrollToBottom();
+        scroll.scrollToBottom({
+            duration: 500,
+            smooth: 'easeOutExpo'
+        });
+    }
+
+    const scrollToPost = (id) => {
+        window.location.hash = ""
+        window.location.hash = id
+        window.scrollBy({ top: -420 })
+        console.log(id);
     }
 
     return (
@@ -130,19 +166,44 @@ export default function Home({ messages }) {
                 </div>
             </div>
             <div className={styles.messagesContainer}>
-            {messages.map((value) => {
-                return (
-                    <div key={value._id}>
-                        <Chat
-                            id={value.id}
-                            name={value.name}
-                            created={value.created}
-                        >
-                            {value.content}
-                        </Chat>
-                    </div>
-                );
-            })}
+                {messages.map((value) => {
+                    const regex = />>(\d*)([\s\S]*)/gm;
+                    let messageId;
+                    let messageBody;
+                    let Content;
+
+                    if (value.content.match(regex)) {
+                        messageId = value.content.replace(regex, "$1");
+                        messageBody = value.content.replace(regex, "$2");
+                        Content = (
+                            <p><span onClick={() => scrollToPost(messageId)} className={styles.responseAnchor}>
+                                {">>" + messageId}
+                            </span>{messageBody}</p>
+                        )
+                        console.debug(value.id, value.content, messageId, messageBody);
+                        console.debug(Content)
+                    } else {
+                        Content = (
+                            <p>{value.content}</p>
+                        );
+                    }
+
+
+                    return (
+                        <div id={value.id} key={value._id}>
+                            <ScrollElement name={value.id.stringify}>
+                                <Chat
+                                    id={value.id}
+                                    name={value.name}
+                                    created={value.created}
+                                    onClick={updateResponseAnchor}
+                                >
+                                    {Content}
+                                </Chat>
+                            </ScrollElement>
+                        </div>
+                    );
+                })}
             </div>
         </div>
     );
